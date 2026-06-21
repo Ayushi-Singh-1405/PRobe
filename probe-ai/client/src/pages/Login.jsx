@@ -175,7 +175,12 @@ export default function Login() {
                     setGoogleLoading(false);
                   }
                 }}
-                onError={() => setError('Google sign-in failed')}
+                onError={(error) => {
+                  console.error('Google sign-in error:', error);
+                  setError(
+                    'Google sign-in failed. Make sure the deployed URL is in Google Cloud Console Authorized JavaScript origins.'
+                  );
+                }}
                 size="large"
                 shape="rectangular"
                 theme="filled_black"
