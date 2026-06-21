@@ -3,6 +3,7 @@
 **Probe every line. Ship with confidence.**
 
 **Live:** [https://p-robe.vercel.app](https://p-robe.vercel.app)
+**Demo:** [Watch video](https://drive.google.com/file/d/13xLtXQcF1bx6y6caJNqbQWfjA8Ac57jq/view?usp=drivesdk)
 
 PRobe is a full-stack web application that lets developers paste any GitHub Pull Request URL and receive an instant, structured AI-powered code review. It identifies bugs, security vulnerabilities, performance issues, and style improvements — and maintains a per-user history of all PR reviews.
 
@@ -36,16 +37,16 @@ probe-ai/
 │   │   ├── middleware/       # JWT auth middleware
 │   │   ├── services/        # GitHub & Claude integrations
 │   │   └── lib/             # Prisma client singleton
-│   └── prisma/
+    │   └── prisma/
 │       └── schema.prisma
-    ├── docs/
-    │   ├── apis.md
-    │   ├── architecture.md
-    │   ├── deployment.md
-    │   ├── structure.md
-    │   ├── summary.md
-    │   └── workflow.md
-    └── README.md
+├── docs/                      # Project documentation
+│   ├── apis.md
+│   ├── architecture.md
+│   ├── deployment.md
+│   ├── structure.md
+│   ├── summary.md
+│   └── workflow.md
+└── README.md
 ```
 
 ## Local Setup
@@ -133,4 +134,4 @@ Client runs on `http://localhost:5173`, server on `http://localhost:5000`.
 
 ---
 
-Built for OpenCode Hackathon — June 2026
+Built for BeingInfinity Hackathon — June 2026
