@@ -77,6 +77,10 @@ router.post('/google', async (req, res) => {
   }
 
   try {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      return res.status(500).json({ message: 'GOOGLE_CLIENT_ID is not configured on the server' });
+    }
+
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -127,8 +131,9 @@ router.post('/google', async (req, res) => {
       token,
       user: { id: user.id, email: user.email, username: user.username, createdAt: user.createdAt },
     });
-  } catch {
-    res.status(401).json({ message: 'Invalid Google credential' });
+  } catch (err) {
+    console.error('Google auth error:', err.message);
+    res.status(401).json({ message: err.message || 'Invalid Google credential' });
   }
 });
 
