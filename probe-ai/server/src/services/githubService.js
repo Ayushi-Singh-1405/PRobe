@@ -29,32 +29,29 @@ function handleGitHubError(err) {
 }
 
 export async function fetchPRData(owner, repo, prNumber, githubToken) {
-  const headers = buildHeaders(githubToken);
+  const token = githubToken || process.env.GITHUB_TOKEN;
+  const headers = buildHeaders(token);
   const baseUrl = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`;
-
   let prResponse, diffResponse, filesResponse;
-
   try {
     [prResponse, diffResponse, filesResponse] = await Promise.all([
-      axios.get(baseUrl, { headers }),
+      axios.get(baseUrl, { headers, maxRedirects: 5 }),
       axios.get(baseUrl, {
         headers: { ...headers, Accept: 'application/vnd.github.v3.diff' },
         transformResponse: (r) => r,
+        maxRedirects: 5,
       }),
-      axios.get(`${baseUrl}/files`, { headers }),
+      axios.get(`${baseUrl}/files`, { headers, maxRedirects: 5 }),
     ]);
   } catch (err) {
     handleGitHubError(err);
   }
-
   const pr = prResponse.data;
   let diff = diffResponse.data;
   const files = filesResponse.data;
-
   if (diff && diff.length > 12000) {
     diff = diff.slice(0, 12000) + '\n\n... (diff truncated)';
   }
-
   return {
     title: pr.title,
     body: pr.body,
