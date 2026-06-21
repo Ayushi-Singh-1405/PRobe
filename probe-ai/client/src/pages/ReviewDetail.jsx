@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { reviewAPI } from '../services/api';
 import { useToast } from '../context/ToastContext';
 import { ArrowLeft, Trash2 } from 'lucide-react';
+import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ReviewOutput from '../components/ReviewOutput';
 
@@ -55,57 +56,93 @@ export default function ReviewDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0D1117] flex items-center justify-center">
-        <LoadingSpinner message="Loading review..." />
+      <div className="min-h-screen" style={{ background: '#0d1117' }}>
+        <Navbar />
+        <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 52px)' }}>
+          <LoadingSpinner message="Loading review..." />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#0D1117] flex flex-col items-center justify-center gap-4 px-4">
-        <p className="text-gray-400">{error}</p>
-        <button
-          onClick={() => navigate('/dashboard')}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition"
-        >
-          Back to Dashboard
-        </button>
+      <div className="min-h-screen" style={{ background: '#0d1117' }}>
+        <Navbar />
+        <div className="flex flex-col items-center justify-center gap-4 px-4" style={{ minHeight: 'calc(100vh - 52px)' }}>
+          <p style={{ color: '#8b949e' }}>{error}</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            style={{
+              background: '#58a6ff',
+              color: '#0d1117',
+              border: 'none',
+              borderRadius: 6,
+              padding: '8px 18px',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+            className="hover:brightness-110 transition"
+          >
+            Back to Dashboard
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0D1117]">
-      <div className="max-w-4xl mx-auto px-4 py-6">
-        {/* Top Bar */}
-        <div className="flex items-center justify-between mb-6">
+    <div className="min-h-screen" style={{ background: '#0d1117' }}>
+      <Navbar />
+      <div style={{ maxWidth: 840, margin: '0 auto', padding: '24px 24px 48px' }}>
+        <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
           <button
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-1 text-sm text-gray-400 hover:text-white transition p-1 min-w-[80px]"
+            className="flex items-center gap-1.5 transition hover:bg-[#161b22]"
+            style={{
+              background: 'transparent',
+              border: '0.5px solid #30363d',
+              color: '#e6edf3',
+              borderRadius: 6,
+              padding: '8px 18px',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={14} />
             Back
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition p-1 min-w-[80px] justify-end"
-          >
-            <Trash2 size={16} />
-            Delete
           </button>
         </div>
 
-        {/* Date + PR URL */}
         {prMeta && (
-          <div className="mb-6 text-sm text-gray-500 space-y-1">
-            <p>{new Date(review.createdAt || Date.now()).toLocaleString()}</p>
-            <p className="font-mono text-xs break-all">{prMeta.prUrl}</p>
-          </div>
+          <p style={{ color: '#484f58', fontSize: 12, marginBottom: 16 }}>
+            {new Date(review.createdAt || Date.now()).toLocaleString()}
+          </p>
         )}
 
-        {/* Review Output */}
         {review && <ReviewOutput review={review} prMeta={prMeta} />}
+
+        <div style={{ marginTop: 24 }}>
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-1.5 transition hover:bg-[#2d0f0f]"
+            style={{
+              background: 'transparent',
+              border: '0.5px solid #f85149',
+              color: '#f85149',
+              borderRadius: 6,
+              padding: '8px 18px',
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+          >
+            <Trash2 size={14} />
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,17 @@
 export default function SeverityBadge({ severity }) {
   const styles = {
-    critical: 'bg-red-500/10 text-red-400 border-red-500/20',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    suggestion: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    critical: {
+      background: '#2d0f0f',
+      color: '#f85149',
+    },
+    warning: {
+      background: '#2d1f0a',
+      color: '#e3b341',
+    },
+    suggestion: {
+      background: '#0a2010',
+      color: '#3fb950',
+    },
   };
 
   const labels = {
@@ -11,11 +20,19 @@ export default function SeverityBadge({ severity }) {
     suggestion: 'SUGGESTION',
   };
 
+  const s = styles[severity] || styles.suggestion;
+
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded-full border ${
-        styles[severity] || styles.suggestion
-      }`}
+      style={{
+        ...s,
+        padding: '5px 14px',
+        borderRadius: 20,
+        fontSize: 12,
+        fontWeight: 500,
+        display: 'inline-flex',
+        alignItems: 'center',
+      }}
     >
       {labels[severity] || severity}
     </span>

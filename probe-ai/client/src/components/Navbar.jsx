@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Search } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 
-export default function Navbar() {
+export default function Navbar({ onMenuToggle, showMenuToggle }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -11,41 +11,105 @@ export default function Navbar() {
     navigate('/');
   };
 
+  const initials = user?.username
+    ? user.username.slice(0, 2).toUpperCase()
+    : '?';
+
   return (
-    <nav className="sticky top-0 z-50 bg-[#0D1117]/95 backdrop-blur border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-white font-bold text-lg">
-          <Search size={20} className="text-indigo-400" />
-          PRobe
+    <nav
+      style={{
+        background: '#0d1117',
+        borderBottom: '0.5px solid #21262d',
+        height: 52,
+        padding: '0 24px',
+      }}
+      className="flex items-center justify-between sticky top-0 z-50"
+    >
+      <div className="flex items-center gap-3">
+        {showMenuToggle && (
+          <button
+            onClick={onMenuToggle}
+            className="text-[#8b949e] hover:text-[#e6edf3] transition p-1"
+          >
+            <Menu size={20} />
+          </button>
+        )}
+        <Link to="/" className="flex items-center gap-[10px] no-underline">
+          <img
+            src="/src/assets/cat.png"
+            alt="PRobe"
+            style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }}
+          />
+          <span style={{ color: '#cae3ff', fontSize: 18, fontWeight: 500 }}>
+            PRobe
+          </span>
         </Link>
-        <div className="flex items-center gap-3">
-          {user ? (
-            <>
-              <span className="text-sm text-gray-400">{user.username}</span>
-              <button
-                onClick={handleLogout}
-                className="text-sm text-gray-500 hover:text-white transition"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="text-sm text-gray-300 hover:text-white transition"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="text-sm px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium transition"
-              >
-                Register
-              </Link>
-            </>
-          )}
-        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        {user ? (
+          <>
+            <span style={{ color: '#8b949e', fontSize: 14 }}>{user.username}</span>
+            <div
+              style={{
+                background: '#1f3a5c',
+                color: '#58a6ff',
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 12,
+                fontWeight: 500,
+              }}
+            >
+              {initials}
+            </div>
+            <button
+              onClick={handleLogout}
+              style={{ color: '#8b949e' }}
+              className="hover:text-[#e6edf3] transition p-1"
+            >
+              <LogOut size={16} />
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              style={{
+                background: 'transparent',
+                border: '0.5px solid #30363d',
+                color: '#e6edf3',
+                borderRadius: 6,
+                padding: '8px 18px',
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: 'none',
+              }}
+              className="hover:bg-[#161b22] transition"
+            >
+              Log in
+            </Link>
+            <Link
+              to="/register"
+              style={{
+                background: '#58a6ff',
+                color: '#0d1117',
+                border: 'none',
+                borderRadius: 6,
+                padding: '8px 18px',
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: 'none',
+              }}
+              className="hover:brightness-110 transition"
+            >
+              Sign up
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
