@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import logoImage from '../assets/cat.png';
@@ -9,7 +10,8 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { register, user } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { register, googleLogin, user } = useAuth();
   const navigate = useNavigate();
 
   if (user) return <Navigate to="/dashboard" replace />;
@@ -181,6 +183,37 @@ export default function Register() {
               Sign up
             </button>
           </form>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '16px 0' }}>
+            <div style={{ flex: 1, height: '0.5px', background: '#21262d' }} />
+            <span style={{ color: '#484f58', fontSize: 12, whiteSpace: 'nowrap' }}>or continue with Google</span>
+            <div style={{ flex: 1, height: '0.5px', background: '#21262d' }} />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {googleLoading ? (
+              <span style={{ color: '#8b949e', fontSize: 13 }}>Signing in...</span>
+            ) : (
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  setGoogleLoading(true);
+                  try {
+                    await googleLogin(credentialResponse.credential);
+                    navigate('/dashboard');
+                  } catch (err) {
+                    setError(err.response?.data?.message || 'Google sign-in failed');
+                  } finally {
+                    setGoogleLoading(false);
+                  }
+                }}
+                onError={() => setError('Google sign-in failed')}
+                size="large"
+                shape="rectangular"
+                theme="filled_black"
+                text="continue_with"
+              />
+            )}
+          </div>
 
           <p style={{ textAlign: 'center', color: '#8b949e', fontSize: 13, marginTop: 16 }}>
             Already have an account?{' '}
