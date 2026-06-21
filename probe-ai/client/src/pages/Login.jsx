@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Navbar from '../components/Navbar';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -23,49 +24,139 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D1117] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <h1 className="text-3xl font-bold text-white text-center mb-8">PRobe</h1>
-        <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-white">Log in</h2>
+    <div className="min-h-screen" style={{ background: '#0d1117' }}>
+      <Navbar />
+      <div className="flex items-center justify-center px-4" style={{ minHeight: 'calc(100vh - 52px)' }}>
+        <div
+          style={{
+            width: '100%',
+            maxWidth: 400,
+            background: '#161b22',
+            border: '0.5px solid #21262d',
+            borderRadius: 12,
+            padding: 32,
+          }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
+            <img
+              src="/src/assets/cat.png"
+              alt="PRobe"
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                objectFit: 'cover',
+                margin: '0 auto 8px',
+              }}
+            />
+            <h2 style={{ color: '#cae3ff', fontSize: 18, fontWeight: 500, margin: 0 }}>
+              PRobe
+            </h2>
+          </div>
+
           {error && (
-            <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded px-3 py-2">
+            <p
+              style={{
+                color: '#f85149',
+                fontSize: 13,
+                background: '#2d0f0f',
+                border: '0.5px solid #f85149',
+                borderRadius: 6,
+                padding: '8px 12px',
+                marginBottom: 16,
+              }}
+            >
               {error}
             </p>
           )}
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg font-medium transition"
-          >
-            Log in
-          </button>
-          <p className="text-sm text-gray-400 text-center">
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div>
+              <label style={{ display: 'block', color: '#8b949e', fontSize: 13, marginBottom: 4 }}>
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: '#0d1117',
+                  border: '0.5px solid #30363d',
+                  color: '#e6edf3',
+                  borderRadius: 6,
+                  padding: '10px 14px',
+                  fontSize: 14,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#58a6ff';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(88,166,255,0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#30363d';
+                  e.target.style.boxShadow = 'none';
+                }}
+                required
+              />
+            </div>
+            <div>
+              <label style={{ display: 'block', color: '#8b949e', fontSize: 13, marginBottom: 4 }}>
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: '#0d1117',
+                  border: '0.5px solid #30363d',
+                  color: '#e6edf3',
+                  borderRadius: 6,
+                  padding: '10px 14px',
+                  fontSize: 14,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#58a6ff';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(88,166,255,0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#30363d';
+                  e.target.style.boxShadow = 'none';
+                }}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                background: '#58a6ff',
+                color: '#0d1117',
+                border: 'none',
+                borderRadius: 6,
+                padding: '10px 14px',
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: 'pointer',
+              }}
+              className="hover:brightness-110 transition"
+            >
+              Log in
+            </button>
+          </form>
+
+          <p style={{ textAlign: 'center', color: '#8b949e', fontSize: 13, marginTop: 16 }}>
             No account?{' '}
-            <Link to="/register" className="text-indigo-400 hover:text-indigo-300">
+            <Link to="/register" style={{ color: '#58a6ff', textDecoration: 'none' }}>
               Sign up
             </Link>
           </p>
-        </form>
+        </div>
       </div>
     </div>
   );

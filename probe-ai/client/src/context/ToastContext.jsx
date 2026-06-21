@@ -4,6 +4,12 @@ const ToastContext = createContext(null);
 
 let toastId = 0;
 
+const borderColors = {
+  success: '#3fb950',
+  error: '#f85149',
+  info: '#58a6ff',
+};
+
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
@@ -22,13 +28,16 @@ export function ToastProvider({ children }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium animate-slide-up ${
-              t.type === 'success'
-                ? 'bg-emerald-600 text-white'
-                : t.type === 'error'
-                  ? 'bg-red-600 text-white'
-                  : 'bg-indigo-600 text-white'
-            }`}
+            style={{
+              background: '#161b22',
+              border: '0.5px solid #21262d',
+              borderLeft: `3px solid ${borderColors[t.type] || '#58a6ff'}`,
+              borderRadius: 8,
+              padding: '12px 16px',
+              color: '#e6edf3',
+              fontSize: 13,
+              animation: 'slide-up 0.2s ease-out',
+            }}
           >
             {t.message}
           </div>
@@ -39,7 +48,6 @@ export function ToastProvider({ children }) {
           from { opacity: 0; transform: translateY(8px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-slide-up { animation: slide-up 0.2s ease-out; }
       `}</style>
     </ToastContext.Provider>
   );

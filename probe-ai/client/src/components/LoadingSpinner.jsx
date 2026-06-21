@@ -1,8 +1,17 @@
 export default function LoadingSpinner({ message }) {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-12">
-      <div className="animate-spin h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
-      {message && <p className="text-sm text-gray-400">{message}</p>}
+      <div
+        className="animate-spin"
+        style={{
+          width: 32,
+          height: 32,
+          border: '3px solid #1f2937',
+          borderTopColor: '#58a6ff',
+          borderRadius: '50%',
+        }}
+      />
+      {message && <p style={{ color: '#8b949e', fontSize: 13 }}>{message}</p>}
     </div>
   );
 }

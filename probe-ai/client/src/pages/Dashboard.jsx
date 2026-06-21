@@ -3,7 +3,18 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { reviewAPI, userAPI } from '../services/api';
-import { Trash2, LogOut, ChevronDown, ChevronUp, Menu, X } from 'lucide-react';
+import {
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  X,
+  GitPullRequest,
+  PawPrint,
+  Search,
+  Sparkles,
+  Check,
+} from 'lucide-react';
+import Navbar from '../components/Navbar';
 import ReviewOutput from '../components/ReviewOutput';
 
 function formatDate(dateStr) {
@@ -139,211 +150,397 @@ export default function Dashboard() {
   };
 
   const steps = [
-    '🔍 Fetching PR data...',
-    '🤖 Running AI analysis...',
-    '✅ Review complete!',
+    { icon: Search, text: 'Fetching PR data...' },
+    { icon: Sparkles, text: 'Running AI analysis...' },
+    { icon: Check, text: 'Review complete!' },
   ];
 
   const sidebarContent = (
-    <>
-      <div className="p-4 border-b border-gray-800">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-lg font-bold">PRobe</span>
-          <button onClick={handleLogout} className="text-gray-400 hover:text-white transition p-1 min-w-[32px]">
-            <LogOut size={18} />
-          </button>
-        </div>
-        <p className="text-sm text-gray-400">Hello, {user?.username}</p>
-      </div>
-
-      <div className="flex gap-3 p-4 border-b border-gray-800">
-        <div className="flex-1 bg-gray-800/50 rounded-lg p-3 text-center">
-          <p className="text-2xl font-bold text-indigo-400">{stats.totalReviews}</p>
-          <p className="text-xs text-gray-400">Reviews</p>
-        </div>
-        <div className="flex-1 bg-gray-800/50 rounded-lg p-3 text-center">
-          <p className="text-2xl font-bold text-indigo-400">{stats.totalIssues}</p>
-          <p className="text-xs text-gray-400">Issues</p>
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* User section */}
+      <div
+        style={{
+          padding: '16px',
+          borderBottom: '0.5px solid #21262d',
+        }}
+      >
+        <div className="flex items-center gap-2" style={{ color: '#cae3ff', fontSize: 14, fontWeight: 500 }}>
+          <PawPrint size={14} />
+          <span>Hello, {user?.username}</span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 pt-4 pb-2">
+      {/* Stats */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 8,
+          padding: '12px 16px',
+          borderBottom: '0.5px solid #21262d',
+        }}
+      >
+        <div
+          style={{
+            background: '#1f2937',
+            borderRadius: 8,
+            padding: 10,
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: 22, fontWeight: 500, color: '#58a6ff' }}>{stats.totalReviews}</div>
+          <div style={{ fontSize: 10, color: '#8b949e', marginTop: 2, textTransform: 'uppercase' }}>
+            Reviews
+          </div>
+        </div>
+        <div
+          style={{
+            background: '#1f2937',
+            borderRadius: 8,
+            padding: 10,
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: 22, fontWeight: 500, color: '#58a6ff' }}>{stats.totalIssues}</div>
+          <div style={{ fontSize: 10, color: '#8b949e', marginTop: 2, textTransform: 'uppercase' }}>
+            Issues
+          </div>
+        </div>
+      </div>
+
+      {/* Review history */}
+      <div className="flex-1 overflow-y-auto" style={{ padding: '8px 0' }}>
+        <div
+          style={{
+            fontSize: 10,
+            color: '#484f58',
+            letterSpacing: '0.8px',
+            fontWeight: 500,
+            textTransform: 'uppercase',
+            padding: '4px 16px 8px',
+          }}
+        >
           Review History
-        </h3>
+        </div>
+
         {history.length === 0 && (
-          <p className="text-sm text-gray-500 px-4">
-            No reviews yet. Paste a PR URL above to get started! 🚀
+          <p style={{ color: '#484f58', fontSize: 12, padding: '0 16px' }}>
+            No reviews yet
           </p>
         )}
-        <div className="space-y-1 px-2 pb-4">
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '0 8px' }}>
           {history.map((item) => (
             <div
               key={item.id}
-              className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer text-sm transition min-h-[44px] ${
-                currentReviewId === item.id
-                  ? 'bg-indigo-600/20 text-indigo-300'
-                  : 'hover:bg-gray-800 text-gray-300'
-              }`}
               onClick={() => loadReview(item.id)}
+              style={{
+                background: currentReviewId === item.id ? '#1f3a5c' : '#161b22',
+                border: currentReviewId === item.id
+                  ? '0.5px solid #58a6ff'
+                  : '0.5px solid #21262d',
+                borderRadius: 8,
+                padding: '10px 12px',
+                cursor: 'pointer',
+                position: 'relative',
+              }}
+              className="group hover:border-[#30363d] transition"
             >
-              <div className="flex-1 min-w-0">
-                <p className="truncate font-medium">{item.repoName}</p>
-                <p className="text-xs text-gray-500">
-                  PR #{item.prNumber} · {formatDate(item.createdAt)}
-                </p>
+              <div className="flex items-center gap-2">
+                <GitPullRequest size={12} style={{ color: '#8b949e', flexShrink: 0 }} />
+                <span
+                  style={{
+                    fontSize: 13,
+                    color: '#e6edf3',
+                    fontWeight: 500,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    flex: 1,
+                  }}
+                >
+                  {item.repoName}
+                </span>
               </div>
-              <span className="shrink-0 text-xs bg-gray-800 rounded-full px-2 py-0.5 text-gray-400">
-                {item.issueCount}
-              </span>
+              <div className="flex items-center gap-2" style={{ marginTop: 2 }}>
+                <span style={{ color: '#8b949e', fontSize: 11 }}>PR #{item.prNumber}</span>
+                <span
+                  style={{
+                    background: '#1f2937',
+                    color: '#8b949e',
+                    fontSize: 9,
+                    padding: '1px 6px',
+                    borderRadius: 8,
+                  }}
+                >
+                  {item.issueCount}
+                </span>
+              </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(item.id);
                 }}
-                className="shrink-0 text-gray-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition p-1 min-w-[28px]"
+                className="opacity-0 group-hover:opacity-100 transition"
+                style={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: '#8b949e',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 2,
+                }}
               >
-                <Trash2 size={14} />
+                <Trash2 size={12} />
               </button>
             </div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 
+  const inputStyle = {
+    background: '#161b22',
+    border: '0.5px solid #30363d',
+    color: '#e6edf3',
+    borderRadius: 8,
+    padding: '10px 14px',
+    fontSize: 14,
+    outline: 'none',
+  };
+
+  const inputFocus = (e) => {
+    e.target.style.borderColor = '#58a6ff';
+    e.target.style.boxShadow = '0 0 0 3px rgba(88,166,255,0.15)';
+  };
+
+  const inputBlur = (e) => {
+    e.target.style.borderColor = '#30363d';
+    e.target.style.boxShadow = 'none';
+  };
+
   return (
-    <div className="min-h-screen bg-[#0D1117] text-white flex flex-col md:flex-row">
-      {/* Mobile hamburger */}
-      <div className="md:hidden flex items-center gap-3 p-3 border-b border-gray-800 bg-gray-900/50">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          className="text-gray-400 hover:text-white transition p-1 min-w-[36px]"
-        >
-          <Menu size={22} />
-        </button>
-        <span className="text-lg font-bold">PRobe</span>
-      </div>
+    <div className="min-h-screen" style={{ background: '#0d1117', display: 'flex', flexDirection: 'column' }}>
+      <Navbar
+        showMenuToggle
+        onMenuToggle={() => setSidebarOpen(true)}
+      />
 
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 z-40 bg-black/50"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Mobile drawer */}
-      <aside
-        className={`md:hidden fixed top-0 left-0 z-50 h-full w-72 bg-[#0D1117] border-r border-gray-800 transform transition-transform duration-200 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex justify-end p-3">
-          <button
+      <div className="flex" style={{ flex: 1, overflow: 'hidden' }}>
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 z-40 bg-black/50"
             onClick={() => setSidebarOpen(false)}
-            className="text-gray-400 hover:text-white transition p-1 min-w-[36px]"
-          >
-            <X size={22} />
-          </button>
-        </div>
-        <div className="flex flex-col h-[calc(100%-56px)] overflow-hidden">
-          {sidebarContent}
-        </div>
-      </aside>
+          />
+        )}
 
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex md:w-72 shrink-0 border-r border-gray-800 bg-gray-900/50 flex-col">
-        {sidebarContent}
-      </aside>
-
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 max-w-4xl">
-        {/* PR Input */}
-        <form onSubmit={handleAnalyze} className="mb-6">
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Paste a GitHub PR URL..."
-              value={prUrl}
-              onChange={(e) => setPrUrl(e.target.value)}
-              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 text-base"
-            />
+        {/* Mobile drawer */}
+        <aside
+          className="md:hidden fixed top-0 left-0 z-50 h-full"
+          style={{
+            width: 220,
+            background: '#161b22',
+            borderRight: '0.5px solid #21262d',
+            transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 200ms',
+            paddingTop: 52,
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: 8 }}>
             <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 rounded-lg font-medium transition whitespace-nowrap text-base min-w-[100px]"
+              onClick={() => setSidebarOpen(false)}
+              style={{ color: '#8b949e', background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}
             >
-              {loading ? 'Analyzing...' : 'Analyze'}
+              <X size={18} />
             </button>
           </div>
+          <div style={{ height: 'calc(100% - 52px)' }}>
+            {sidebarContent}
+          </div>
+        </aside>
 
-          <button
-            type="button"
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="mt-2 text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition py-1"
-          >
-            {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-            Advanced
-          </button>
-          {showAdvanced && (
-            <div className="mt-2">
-              <label className="block text-xs text-gray-500 mb-1">
-                GitHub Token (for private repos)
-              </label>
+        {/* Desktop sidebar */}
+        <aside
+          className="hidden md:flex flex-col shrink-0"
+          style={{
+            width: 220,
+            background: '#161b22',
+            borderRight: '0.5px solid #21262d',
+            height: 'calc(100vh - 52px)',
+          }}
+        >
+          {sidebarContent}
+        </aside>
+
+        {/* Main content */}
+        <main
+          className="flex-1 overflow-y-auto"
+          style={{ padding: '20px 24px', maxWidth: 840 }}
+        >
+          {/* PR Input */}
+          <form onSubmit={handleAnalyze} style={{ marginBottom: 24 }}>
+            <div className="flex gap-2">
               <input
-                type="password"
-                placeholder="ghp_..."
-                value={githubToken}
-                onChange={(e) => setGithubToken(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 text-sm"
+                type="text"
+                placeholder="Paste a GitHub PR URL..."
+                value={prUrl}
+                onChange={(e) => setPrUrl(e.target.value)}
+                style={{ ...inputStyle, flex: 1 }}
+                onFocus={inputFocus}
+                onBlur={inputBlur}
               />
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  background: '#58a6ff',
+                  color: '#0d1117',
+                  border: 'none',
+                  borderRadius: 6,
+                  padding: '8px 18px',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  whiteSpace: 'nowrap',
+                  opacity: loading ? 0.6 : 1,
+                }}
+                className="hover:brightness-110 transition"
+              >
+                <Search size={14} />
+                {loading ? 'Analyzing...' : 'Analyze'}
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              style={{
+                marginTop: 8,
+                color: '#8b949e',
+                fontSize: 12,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+              className="hover:text-[#e6edf3] transition"
+            >
+              {showAdvanced ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              Advanced
+            </button>
+
+            {showAdvanced && (
+              <div style={{ marginTop: 6 }}>
+                <label style={{ display: 'block', color: '#8b949e', fontSize: 11, marginBottom: 4 }}>
+                  GitHub Token (for private repos)
+                </label>
+                <input
+                  type="password"
+                  placeholder="ghp_..."
+                  value={githubToken}
+                  onChange={(e) => setGithubToken(e.target.value)}
+                  style={{ ...inputStyle, width: '100%', boxSizing: 'border-box' }}
+                  onFocus={inputFocus}
+                  onBlur={inputBlur}
+                />
+              </div>
+            )}
+          </form>
+
+          {/* Error */}
+          {error && (
+            <div
+              style={{
+                marginBottom: 24,
+                padding: '10px 14px',
+                background: '#2d0f0f',
+                border: '0.5px solid #f85149',
+                borderRadius: 10,
+                color: '#f85149',
+                fontSize: 13,
+              }}
+            >
+              {error}
             </div>
           )}
-        </form>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
-            {error}
-          </div>
-        )}
-
-        {/* Loading */}
-        {loading && (
-          <div className="mb-6 bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <div className="space-y-4">
-              {steps.map((step, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition ${
-                      loadingStep > i
-                        ? 'bg-emerald-500 text-white'
-                        : loadingStep === i
-                          ? 'bg-indigo-600 text-white animate-pulse'
-                          : 'bg-gray-700 text-gray-500'
-                    }`}
-                  >
-                    {loadingStep > i ? '✓' : i + 1}
+          {/* Loading */}
+          {loading && (
+            <div
+              style={{
+                marginBottom: 24,
+                background: '#161b22',
+                border: '0.5px solid #21262d',
+                borderRadius: 10,
+                padding: 20,
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {steps.map((step, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 11,
+                        fontWeight: 500,
+                        background:
+                          loadingStep > i
+                            ? '#3fb950'
+                            : loadingStep === i
+                              ? '#58a6ff'
+                              : '#1f2937',
+                        color:
+                          loadingStep > i
+                            ? '#0d1117'
+                            : loadingStep === i
+                              ? '#fff'
+                              : '#484f58',
+                        animation: loadingStep === i ? 'pulse 1.5s infinite' : 'none',
+                      }}
+                    >
+                      {loadingStep > i ? <Check size={12} /> : i + 1}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        color: loadingStep >= i ? '#e6edf3' : '#484f58',
+                      }}
+                    >
+                      {step.text}
+                    </span>
                   </div>
-                  <span
-                    className={`text-sm transition ${
-                      loadingStep >= i ? 'text-gray-200' : 'text-gray-600'
-                    }`}
-                  >
-                    {step}
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Review Output */}
-        {currentReview && !loading && (
-          <ReviewOutput review={currentReview} prMeta={currentPrMeta} />
-        )}
-      </main>
+          {/* Review Output */}
+          {currentReview && !loading && (
+            <ReviewOutput review={currentReview} prMeta={currentPrMeta} />
+          )}
+        </main>
+      </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
+        }
+      `}</style>
     </div>
   );
 }
