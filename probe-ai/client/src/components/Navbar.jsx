@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, Menu } from 'lucide-react';
+import logoImage from '../assets/cat.png';
 
 export default function Navbar({ onMenuToggle, showMenuToggle }) {
   const { user, logout } = useAuth();
@@ -36,7 +37,7 @@ export default function Navbar({ onMenuToggle, showMenuToggle }) {
         )}
         <Link to="/" className="flex items-center gap-[10px] no-underline">
           <img
-            src="/src/assets/cat.png"
+            src={logoImage}
             alt="PRobe"
             style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }}
           />

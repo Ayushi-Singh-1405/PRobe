@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
+import logoImage from '../assets/cat.png';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -40,7 +41,7 @@ export default function Register() {
         >
           <div style={{ textAlign: 'center', marginBottom: 24 }}>
             <img
-              src="/src/assets/cat.png"
+              src={logoImage}
               alt="PRobe"
               style={{
                 width: 48,

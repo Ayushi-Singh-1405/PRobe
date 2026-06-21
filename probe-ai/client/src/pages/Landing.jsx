@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Code2, Shield, History } from 'lucide-react';
 import Navbar from '../components/Navbar';
+import logoImage from '../assets/cat.png';
 
 export default function Landing() {
   const [prUrl, setPrUrl] = useState('');
@@ -27,7 +28,7 @@ export default function Landing() {
         style={{ paddingTop: 80 }}
       >
         <img
-          src="/src/assets/cat.png"
+          src={logoImage}
           alt="PRobe"
           style={{
             width: 80,
