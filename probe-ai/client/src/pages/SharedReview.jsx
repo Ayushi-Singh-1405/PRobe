@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { reviewAPI } from '../services/api';
-import { useToast } from '../context/ToastContext';
-import { ArrowLeft, Trash2 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ReviewOutput from '../components/ReviewOutput';
 
-export default function ReviewDetail() {
+export default function SharedReview() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [review, setReview] = useState(null);
@@ -18,7 +14,7 @@ export default function ReviewDetail() {
 
   useEffect(() => {
     reviewAPI
-      .getById(id)
+      .shareGet(id)
       .then((data) => {
         setReview(data.reviewData);
         setPrMeta({
@@ -43,21 +39,10 @@ export default function ReviewDetail() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleDelete = async () => {
-    if (!window.confirm('Delete this review?')) return;
-    try {
-      await reviewAPI.deleteReview(id);
-      showToast('Review deleted', 'success');
-      navigate('/dashboard', { replace: true });
-    } catch {
-      showToast('Failed to delete review', 'error');
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen" style={{ background: '#0d1117' }}>
-        <Navbar />
+        <Navbar hideAuth />
         <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 52px)' }}>
           <LoadingSpinner message="Loading review..." />
         </div>
@@ -68,11 +53,11 @@ export default function ReviewDetail() {
   if (error) {
     return (
       <div className="min-h-screen" style={{ background: '#0d1117' }}>
-        <Navbar />
+        <Navbar hideAuth />
         <div className="flex flex-col items-center justify-center gap-4 px-4" style={{ minHeight: 'calc(100vh - 52px)' }}>
           <p style={{ color: '#8b949e' }}>{error}</p>
-          <button
-            onClick={() => navigate('/dashboard')}
+          <Link
+            to="/"
             style={{
               background: '#58a6ff',
               color: '#0d1117',
@@ -81,12 +66,12 @@ export default function ReviewDetail() {
               padding: '8px 18px',
               fontSize: 14,
               fontWeight: 500,
-              cursor: 'pointer',
+              textDecoration: 'none',
             }}
             className="hover:brightness-110 transition"
           >
-            Back to Dashboard
-          </button>
+            Go Home
+          </Link>
         </div>
       </div>
     );
@@ -94,54 +79,28 @@ export default function ReviewDetail() {
 
   return (
     <div className="min-h-screen" style={{ background: '#0d1117' }}>
-      <Navbar />
-      <div style={{ maxWidth: 840, margin: '0 auto', padding: '24px 24px 48px' }}>
-        <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-1.5 transition hover:bg-[#161b22]"
-            style={{
-              background: 'transparent',
-              border: '0.5px solid #30363d',
-              color: '#e6edf3',
-              borderRadius: 6,
-              padding: '8px 18px',
-              fontSize: 14,
-              fontWeight: 500,
-              cursor: 'pointer',
-            }}
-          >
-            <ArrowLeft size={14} />
-            Back
-          </button>
-        </div>
-
-        {prMeta && (
-          <p style={{ color: '#484f58', fontSize: 12, marginBottom: 16 }}>
-            {new Date(review.createdAt || Date.now()).toLocaleString()}
-          </p>
-        )}
-
+      <Navbar hideAuth />
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: '24px 24px 48px' }}>
         {review && <ReviewOutput review={review} prMeta={prMeta} reviewId={id} />}
 
-        <div style={{ marginTop: 24 }}>
-          <button
-            onClick={handleDelete}
-            className="flex items-center gap-1.5 transition hover:bg-[#2d0f0f]"
+        <div style={{ marginTop: 32, textAlign: 'center' }}>
+          <Link
+            to="/register"
             style={{
-              background: 'transparent',
-              border: '0.5px solid #f85149',
-              color: '#f85149',
+              background: '#58a6ff',
+              color: '#0d1117',
+              border: 'none',
               borderRadius: 6,
-              padding: '8px 18px',
+              padding: '10px 24px',
               fontSize: 14,
               fontWeight: 500,
-              cursor: 'pointer',
+              textDecoration: 'none',
+              display: 'inline-block',
             }}
+            className="hover:brightness-110 transition"
           >
-            <Trash2 size={14} />
-            Delete
-          </button>
+            Sign up to save your own reviews
+          </Link>
         </div>
       </div>
     </div>

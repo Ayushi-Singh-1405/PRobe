@@ -1,10 +1,27 @@
+import { useToast } from '../context/ToastContext';
 import SeverityBadge from './SeverityBadge';
 import IssueCard from './IssueCard';
-import { Sparkles, Check } from 'lucide-react';
+import { Share2, Sparkles, Check } from 'lucide-react';
 
 const severityOrder = { critical: 0, warning: 1, suggestion: 2 };
 
-export default function ReviewOutput({ review, prMeta }) {
+export default function ReviewOutput({ review, prMeta, reviewId }) {
+  const { showToast } = useToast();
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/share/${reviewId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+    showToast('Link copied to clipboard!', 'success');
+  };
   const issues = (review.issues || []).sort(
     (a, b) => (severityOrder[a.severity] ?? 99) - (severityOrder[b.severity] ?? 99),
   );
@@ -33,20 +50,39 @@ export default function ReviewOutput({ review, prMeta }) {
           }}
         >
           <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
-            <span
+          <span
+            style={{
+              fontSize: 14,
+              fontWeight: 500,
+              color: '#cae3ff',
+              flex: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {prMeta.prTitle}
+          </span>
+          {reviewId && (
+            <button
+              onClick={handleShare}
+              title="Share review"
               style={{
-                fontSize: 14,
-                fontWeight: 500,
-                color: '#cae3ff',
-                flex: 1,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                color: '#8b949e',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 4,
+                display: 'flex',
+                alignItems: 'center',
+                flexShrink: 0,
               }}
+              className="hover:text-[#e6edf3] transition"
             >
-              {prMeta.prTitle}
-            </span>
-          </div>
+              <Share2 size={14} />
+            </button>
+          )}
+        </div>
           <div className="flex flex-wrap items-center gap-2">
             <span
               style={{

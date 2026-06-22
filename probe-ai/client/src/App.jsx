@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ReviewDetail from './pages/ReviewDetail';
+import SharedReview from './pages/SharedReview';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/share/:id" element={<SharedReview />} />
       </Routes>
     </ToastProvider>
   );

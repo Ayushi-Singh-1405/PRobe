@@ -6,6 +6,18 @@ import { analyzeCode } from '../services/claudeService.js';
 
 const router = Router();
 
+router.get('/share/:id', async (req, res) => {
+  const review = await prisma.review.findUnique({
+    where: { id: req.params.id },
+  });
+
+  if (!review) {
+    return res.status(404).json({ message: 'Review not found' });
+  }
+
+  res.json(review);
+});
+
 router.use(authMiddleware);
 
 router.post('/analyze', async (req, res) => {

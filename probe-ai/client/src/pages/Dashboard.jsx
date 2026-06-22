@@ -530,7 +530,7 @@ export default function Dashboard() {
 
           {/* Review Output */}
           {currentReview && !loading && (
-            <ReviewOutput review={currentReview} prMeta={currentPrMeta} />
+            <ReviewOutput review={currentReview} prMeta={currentPrMeta} reviewId={currentReviewId} />
           )}
         </main>
       </div>

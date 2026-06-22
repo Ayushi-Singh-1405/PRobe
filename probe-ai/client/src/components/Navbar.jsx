@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { LogOut, Menu } from 'lucide-react';
 import logoImage from '../assets/cat.png';
 
-export default function Navbar({ onMenuToggle, showMenuToggle }) {
+export default function Navbar({ onMenuToggle, showMenuToggle, hideAuth }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -47,71 +47,73 @@ export default function Navbar({ onMenuToggle, showMenuToggle }) {
         </Link>
       </div>
 
-      <div className="flex items-center gap-3">
-        {user ? (
-          <>
-            <span style={{ color: '#8b949e', fontSize: 14 }}>{user.username}</span>
-            <div
-              style={{
-                background: '#1f3a5c',
-                color: '#58a6ff',
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 12,
-                fontWeight: 500,
-              }}
-            >
-              {initials}
-            </div>
-            <button
-              onClick={handleLogout}
-              style={{ color: '#8b949e' }}
-              className="hover:text-[#e6edf3] transition p-1"
-            >
-              <LogOut size={16} />
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              style={{
-                background: 'transparent',
-                border: '0.5px solid #30363d',
-                color: '#e6edf3',
-                borderRadius: 6,
-                padding: '8px 18px',
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: 'none',
-              }}
-              className="hover:bg-[#161b22] transition"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/register"
-              style={{
-                background: '#58a6ff',
-                color: '#0d1117',
-                border: 'none',
-                borderRadius: 6,
-                padding: '8px 18px',
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: 'none',
-              }}
-              className="hover:brightness-110 transition"
-            >
-              Sign up
-            </Link>
-          </>
-        )}
-      </div>
+      {!hideAuth && (
+        <div className="flex items-center gap-3">
+          {user ? (
+            <>
+              <span style={{ color: '#8b949e', fontSize: 14 }}>{user.username}</span>
+              <div
+                style={{
+                  background: '#1f3a5c',
+                  color: '#58a6ff',
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 12,
+                  fontWeight: 500,
+                }}
+              >
+                {initials}
+              </div>
+              <button
+                onClick={handleLogout}
+                style={{ color: '#8b949e' }}
+                className="hover:text-[#e6edf3] transition p-1"
+              >
+                <LogOut size={16} />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                style={{
+                  background: 'transparent',
+                  border: '0.5px solid #30363d',
+                  color: '#e6edf3',
+                  borderRadius: 6,
+                  padding: '8px 18px',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                }}
+                className="hover:bg-[#161b22] transition"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                style={{
+                  background: '#58a6ff',
+                  color: '#0d1117',
+                  border: 'none',
+                  borderRadius: 6,
+                  padding: '8px 18px',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                }}
+                className="hover:brightness-110 transition"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

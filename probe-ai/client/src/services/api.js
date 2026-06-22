@@ -36,6 +36,7 @@ export const reviewAPI = {
   getHistory: () => api.get('/api/review/history').then((r) => r.data),
   getById: (id) => api.get(`/api/review/${id}`).then((r) => r.data),
   deleteReview: (id) => api.delete(`/api/review/${id}`).then((r) => r.data),
+  shareGet: (id) => api.get(`/api/review/share/${id}`).then((r) => r.data),
 };
 
 export const userAPI = {
