@@ -6,6 +6,7 @@
 **Demo:** [Watch video](https://drive.google.com/file/d/13xLtXQcF1bx6y6caJNqbQWfjA8Ac57jq/view?usp=drivesdk)
 
 PRobe is a full-stack web application that lets developers paste any GitHub Pull Request URL and receive an instant, structured AI-powered code review. It identifies bugs, security vulnerabilities, performance issues, and style improvements — and maintains a per-user history of all PR reviews.
+**Theme:** AI-augmented developer tools
 
 ## Tech Stack
 
